@@ -1,0 +1,9 @@
+para qu funcione en el celular se deben agregar los permisos en el manifiesto:
+<uses-permission android:name="android.permission.INTERNET"/>
+
+-cambiar el image por ImageFade par aponer un placeholder en el actor detalles pelicu;a
+-Comentado en el homePage.dart: // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+-A veces no funciona en el sliderWidget: initialPage: 5, // iniciar en la pagina x
+-Se cambio en el swipWidget: // itemHeight: tamanoPantalla.height * 0.65, //la mitad de pantalla
+-Agregar pantalla splash
+-Bloquear orientacion
