@@ -1,12 +1,15 @@
-import 'package:apppelicula/src/models/peliculasModel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
+
+import 'package:card_swiper/card_swiper.dart';
+import 'package:apppelicula/src/models/peliculas_model.dart';
 
 class MiSwipeCard extends StatelessWidget {
-  //
+  const MiSwipeCard({
+    super.key,
+    required this.elementos,
+  });
+
   final List<Pelicula> elementos;
-  //
-  MiSwipeCard({@required this.elementos}); //constructor moderno
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +27,11 @@ class MiSwipeCard extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.only(top: 10, bottom: 10),
-          child: Text("En cine", style: Theme.of(context).textTheme.headline6),
+          padding: const EdgeInsets.only(top: 10, bottom: 10),
+          child: Text(
+            'En cine',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
         ),
         Swiper(
           //estilo de las taerjetas (ver mas en la documentacion)
@@ -36,40 +42,48 @@ class MiSwipeCard extends StatelessWidget {
           //Este es un bucle con su index, se ejecuta las veces establecida arriba itemCount
           itemBuilder: (BuildContext context, int index) {
             //miId agregado en la clase modelo para manejar los hero
-            elementos[index].miId = "${elementos[index].id}-desdeswipeWidget";
+            elementos[index].miId =
+                '${elementos[index].id}-desdeswipeWidget';
 
-            return ListView(
+            return Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Hero(
                   //crreamos un unico id para el hero, ya que se llama tmabiendesde el peliculasDetalles
-                  tag: elementos[index].miId,
+                  tag: elementos[index].miId!,
                   child: ClipRRect(
                     //permite agregar borderRadius a sus hijos
                     borderRadius: BorderRadius.circular(20.0),
                     child: GestureDetector(
                       child: FadeInImage(
-                        placeholder: AssetImage("assets/no-image.jpg"),
+                        placeholder:
+                            const AssetImage('assets/no-image.jpg'),
                         // image: NetworkImage("https://image.tmdb.org/t/p/w500/${elementos[index].posterPath}"),
-                        image: NetworkImage(elementos[index].obetenerPoster()),
+                        image:
+                            NetworkImage(elementos[index].obtenerPoster()),
                         fit: BoxFit.fill,
                       ),
                       onTap: () {
-                        Navigator.pushNamed(context, "detallePelicula",
-                            arguments: elementos[index]);
+                        Navigator.pushNamed(
+                          context,
+                          'detallePelicula',
+                          arguments: elementos[index],
+                        );
                       },
                     ),
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.only(top: 5),
+                  padding: const EdgeInsets.only(top: 5),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white),
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                  ),
                   child: Text(
                     elementos[index].title,
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.subtitle1,
+                    style: Theme.of(context).textTheme.titleSmall,
                   ),
                 ),
               ],

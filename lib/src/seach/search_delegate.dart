@@ -1,9 +1,9 @@
-import 'package:apppelicula/src/models/peliculasModel.dart';
 import 'package:flutter/material.dart';
 
-import 'package:apppelicula/src/provider/proveedorDePeliculas.dart';
+import 'package:apppelicula/src/models/peliculas_model.dart';
+import 'package:apppelicula/src/provider/proveedor_de_peliculas.dart';
 
-class DatosDeBusqueda extends SearchDelegate {
+class DatosDeBusqueda extends SearchDelegate<Pelicula?> {
   // final otrasPeliculas = [
   //   "joha",
   //   "spiderman",
@@ -24,7 +24,7 @@ class DatosDeBusqueda extends SearchDelegate {
     //retorna una lsita de widgets
     return [
       IconButton(
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
         onPressed: () {
           //esta variable guarda lo que el usuario escribe, lo limpiamo, existe por defecto
           query = '';
@@ -50,16 +50,10 @@ class DatosDeBusqueda extends SearchDelegate {
     // throw UnimplementedError();
   }
 
-  String seleccion;
-
   @override
   Widget buildResults(BuildContext context) {
     // Crea los resutlados que vamos mostrar
-    // return Container(
-    //     //viene de abajo del buildSugestion pero no lo usaremos
-    //     // child: Text(seleccion),
-    //     );
-    throw UnimplementedError();
+    return Container();
   }
 
   @override
@@ -96,38 +90,43 @@ class DatosDeBusqueda extends SearchDelegate {
       return Container(); //prevenir algun error
     }
 
-    final proveedorPelicula = new ProveedorDePeliculas();
+    final ProveedorDePeliculas proveedorPelicula = ProveedorDePeliculas();
 
     return FutureBuilder<List<Pelicula>>(
       //mandamo el query que escribe el usuario
       future: proveedorPelicula.buscarPelicula(query),
-      initialData: [],
+      initialData: const [],
       builder: (BuildContext context, AsyncSnapshot<List<Pelicula>> snapshot) {
         if (snapshot.hasData) {
-          final listaPeliculas = snapshot.data;
+          final List<Pelicula> listaPeliculas = snapshot.data ?? const [];
 
           return ListView.builder(
             itemCount: listaPeliculas.length,
             itemBuilder: (context, index) {
+              final Pelicula pelicula = listaPeliculas[index];
               return ListTile(
                 leading: FadeInImage(
-                  placeholder: AssetImage("assets/no-image.jpg"),
-                  image: NetworkImage(listaPeliculas[index].obetenerPoster()),
+                  placeholder: const AssetImage("assets/no-image.jpg"),
+                  image: NetworkImage(pelicula.obtenerPoster()),
                   width: 50,
                   fit: BoxFit.contain,
                 ),
-                title: Text(listaPeliculas[index].title),
-                subtitle: Text(listaPeliculas[index].originalTitle),
+                title: Text(pelicula.title),
+                subtitle: Text(pelicula.originalTitle),
                 onTap: () {
+                  pelicula.miId ??= '${pelicula.id}-busqueda';
                   close(context, null);
-                  Navigator.pushNamed(context, "detallePelicula",
-                      arguments: listaPeliculas[index]);
+                  Navigator.pushNamed(
+                    context,
+                    "detallePelicula",
+                    arguments: pelicula,
+                  );
                 },
               );
             },
           );
         } else {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
       },
     );
