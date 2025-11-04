@@ -1,4 +1,4 @@
-package com.mangugames.infopelis
+package com.jopamstudio.estrenosya
 
 import io.flutter.embedding.android.FlutterActivity
 
